@@ -5,6 +5,8 @@ name: CI
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
   pull_request:
     branches:
       - main
@@ -20,8 +22,14 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   backport:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     name: Backport
     steps:
-      - name: Backport
-        uses: radcortez/backport-action@main
+      - name: trigger single Job
+        uses: appleboy/jenkins-action@master
+        with:
+          url: "http://example.com"
+          user: "example"
+          token: ${{ secrets.TOKEN }}
+          job: "foobar"
